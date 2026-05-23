@@ -2,8 +2,9 @@ package me.waterarchery.littournaments.models;
 
 import com.chickennw.utils.ChickenUtils;
 import com.chickennw.utils.libs.folia.wrapper.task.WrappedTask;
+import com.chickennw.utils.utils.ConfigUtils;
 import lombok.Getter;
-import me.waterarchery.littournaments.LitTournaments;
+import me.waterarchery.littournaments.configurations.ConfigFile;
 import me.waterarchery.littournaments.database.TournamentDatabase;
 
 import java.util.HashMap;
@@ -37,8 +38,8 @@ public class TournamentLeaderboard {
     public void startRefreshTask() {
         if (refreshTask != null) refreshTask.cancel();
 
-        LitTournaments instance = LitTournaments.getInstance();
-        long taskInterval = instance.getConfig().getLong("LeaderboardRefresh") * 20L;
+        ConfigFile config = ConfigUtils.get(ConfigFile.class);
+        int taskInterval = config.getLeaderboardRefresh() * 20;
 
         refreshTask = ChickenUtils.getFoliaLib().getScheduler().runTimerAsync(() -> {
             TournamentDatabase database = TournamentDatabase.getInstance();
